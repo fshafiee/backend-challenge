@@ -4,7 +4,7 @@
 
 This take-home assignment evaluates a senior backend engineer's ability to design **correct, scalable, and resilient backend systems** under high concurrency.
 
-The handout **does not explicitly prescribe** an event-driven or eventually consistent architecture. Instead, the **Performance & Reliability Expectations** section establishes constraints — low-latency p99 targets, non-blocking request handling, and resilience under contention — that **strongly imply** one. A strong candidate should recognize that meeting these expectations naturally leads to asynchronous, event-driven design. Arriving at this architecture through reasoning (rather than being told) is itself a signal of senior-level design judgment.
+The handout **does not explicitly prescribe** an event-driven or eventually consistent architecture. Instead, the **Performance & Reliability Expectations** section establishes constraints — low-latency targets, non-blocking request handling, and resilience under contention — that **strongly imply** one. A strong candidate should recognize that meeting these expectations naturally leads to asynchronous, event-driven design. Arriving at this architecture through reasoning (rather than being told) is itself a signal of senior-level design judgment.
 
 The scope is intentionally constrained. Candidates are expected to demonstrate judgment, not completeness.
 
@@ -162,6 +162,35 @@ Look for discussion of:
 
 🚩 **Red flag:** "We just decrement inventory in memory"
 🚩 **Red flag:** Serializing everything behind a global lock
+
+### Distributed Counting Semaphore as a Conceptual Model
+
+The inventory reservation problem maps directly to a **distributed counting semaphore**:
+
+| Semaphore concept | Flash sale equivalent |
+| ----------------- | ---------------------------------------------------- |
+| Permit count (N)  | Available inventory for an item                      |
+| `acquire()`       | Reserve an item (decrement available inventory)      |
+| `release()`       | Cancel/expire a reservation (release inventory back) |
+| Count reaches 0   | Inventory exhausted — new orders enter waiting state |
+| FIFO wait queue   | Waiting orders, promoted in order on release         |
+
+A candidate who explicitly identifies this mapping demonstrates strong conceptual grounding — they recognize that inventory allocation under concurrency is a well-studied coordination problem, not something to solve ad hoc.
+
+The key insight is that while the *concept* applies directly, a production implementation must account for properties that a classic in-process semaphore does not provide:
+
+* **Distribution** — permits must be coordinated across multiple service replicas
+* **Durability** — inventory state must survive process restarts
+* **Time-bound permits (leases)** — reservations expire, adding a TTL dimension absent from standard semaphores
+
+Acceptable implementations include atomic conditional writes at the database layer (e.g., `UPDATE ... SET available = available - 1 WHERE available > 0`) or Redis-based atomic operations — both of which are semantically distributed counting semaphores backed by a durable or shared store.
+
+The strongest implementations will connect the semaphore operation to an **immutable log of events via CDC**. When the database is the sole authority for the semaphore state (acquire/release), and every state mutation is captured as an ordered, immutable event through Change Data Capture, the system gains a critical property: downstream consumers can process events out of order or replay them without compromising the correctness of the inventory invariant. The semaphore ensures correctness at the write boundary; the CDC log ensures that correctness is faithfully propagated — regardless of consumer timing, crashes, or redelivery.
+
+✅ **Strongest signal:** Candidate connects semaphore operations to CDC, explaining how the immutable event log protects correctness against out-of-order processing
+✅ **Strong signal:** Candidate identifies the distributed counting semaphore analogy and explains why a naive in-process implementation won't work
+✅ **Strong signal:** Candidate connects the lease/TTL aspect to semaphore limitations and designs accordingly
+🟡 **Acceptable:** Candidate implements the correct atomic behavior without naming the pattern explicitly
 
 ---
 

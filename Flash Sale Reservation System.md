@@ -6,7 +6,7 @@ You are designing a backend service for a flash sale where a limited number of i
 
 The goal of this exercise is **not** to build a fully featured e-commerce platform. Instead, it is to demonstrate how you reason about system design, data modeling, concurrency, and asynchronous workflows in a realistic but tightly scoped problem.
 
-You are encouraged to make reasonable assumptions and clearly document them, as long as they don’t violate the specific constraints and scope of the problem outlined in this documents.
+**You are encouraged to make reasonable assumptions** and clearly document them, as long as they don’t violate the specific constraints and scope of the problem outlined in this documents.
 
 ---
 
@@ -15,7 +15,7 @@ You are encouraged to make reasonable assumptions and clearly document them, as 
 - The service must be implemented in **TypeScript using NestJS**.
   - You are free to choose the rest of the stack and the tooling.
 - No frontend or UI is required.
-- External systems such as payment providers or email services should be stubbed or simulated.
+- External systems such as payment providers and notification systems should be stubbed or simulated.
 
 ---
 
@@ -25,7 +25,7 @@ The system is expected to handle large bursts of concurrent requests during a fl
 
 - API endpoints should respond **within predictable, known low-latency bounds**, even during peak concurrency.
 - The system must **not degrade under contention**.
-- You can assume an ideal lag-free auto-scaler maintaining the service replicas based on the number of incoming requests.
+- You can assume an ideal lag-free auto-scaler that adjusts the service replica count based on the number of incoming requests.
 
 These are not formal SLAs but design-level expectations. They should guide your architectural choices and trade-offs.
 
@@ -41,7 +41,7 @@ Reservations may expire if payment is not completed in time, at which point inve
 
 ## Order and Reservation Lifecycle
 
-An order in this system progresses through a series of well-defined states. You are free to name or model these states differently, but your design should clearly support the following behaviors.
+An order in this system progresses through a series of states. You are free to name or model these states differently, but your design should clearly support the following behaviors.
 
 A customer begins by attempting to reserve an item. If inventory is available, the system creates a reservation and places the order into a state where payment is expected within a fixed time window. While the reservation is active, the inventory is considered unavailable to other customers.
 
@@ -81,3 +81,4 @@ Please submit:
    - The order and reservation lifecycle
    - How concurrency and race conditions are handled
    - The trade-offs you made and alternatives you considered
+   - How to build, run, and test the application.

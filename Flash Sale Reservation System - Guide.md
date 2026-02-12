@@ -69,6 +69,19 @@ Strong candidates will:
 🚩 **Red flag:** Transaction scripts coordinating multiple subsystems synchronously
 🚩 **Red flag:** Expecting strong consistency across async boundaries
 
+#### Client Notification via Push Channels
+
+A natural follow-up to the async design is: *if the API responds before processing is complete, how does the client learn the outcome?*
+
+A strong assumption candidates can make is that the system can **proactively push state updates to clients** through a WebSocket connection or a cloud messaging platform (e.g., Firebase Cloud Messaging). This is a reasonable and architecturally sound assumption — it completes the picture of the eventually consistent design by addressing the client-facing feedback loop.
+
+Since the candidate handout already states that **external systems should be stubbed or simulated**, candidates are free to stub this push channel and focus on the backend event flow that feeds it. What matters is that the design accounts for it: async consumers that process state transitions should be able to emit a client-facing notification (e.g., "your reservation was confirmed" or "you've been promoted from the waitlist") through a stubbed push interface.
+
+✅ **Positive signal:** Candidate explicitly acknowledges the need for push-based client updates as a consequence of async processing, and stubs or simulates the delivery channel
+✅ **Strong signal:** The push notification is modeled as a downstream consumer of domain events, not bolted onto the API response
+🟡 **Acceptable:** Candidate mentions polling as a fallback but recognizes its limitations under flash sale load
+🚩 **Red flag:** No consideration of how the client learns about async outcomes
+
 ---
 
 ## 3. Queue vs Stream: Correct Tooling for the Job

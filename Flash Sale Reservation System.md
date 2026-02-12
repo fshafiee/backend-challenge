@@ -6,7 +6,7 @@ You are designing a backend service for a flash sale where a limited number of i
 
 The goal of this exercise is **not** to build a fully featured e-commerce platform. Instead, it is to demonstrate how you reason about system design, data modeling, concurrency, and asynchronous workflows in a realistic but tightly scoped problem.
 
-You are encouraged to make reasonable assumptions and clearly document them.
+You are encouraged to make reasonable assumptions and clearly document them, as long as they don’t violate the specific constraints and scope of the problem outlined in this documents.
 
 ---
 
@@ -24,15 +24,14 @@ You are encouraged to make reasonable assumptions and clearly document them.
 The system is expected to handle large bursts of concurrent requests during a flash sale event. The following expectations should inform your design decisions:
 
 - API endpoints should respond **within predictable, known low-latency bounds**, even during peak concurrency.
-- The system must **not degrade under contention**. Concurrent reservation attempts for the same item should not cause cascading delays, timeouts, or lock-related bottlenecks that affect unrelated requests.
-- It is acceptable for certain downstream effects or read models to be **eventually consistent**, as long as correctness invariants (e.g., inventory never goes negative) are preserved.
+- The system must **not degrade under contention**.
 - You can assume an ideal lag-free auto-scaler maintaining the service replicas based on the number of incoming requests.
 
 These are not formal SLAs but design-level expectations. They should guide your architectural choices and trade-offs.
 
 ---
 
-## High-Level Problem Description
+## Problem Description
 
 The system manages the lifecycle of customer orders during a flash sale. Inventory is limited, and customers compete to reserve items. A reservation temporarily holds inventory for a customer while they attempt to complete payment.
 

@@ -1,7 +1,5 @@
 # Assessment & Evaluation Guide (Internal)
 
-## Purpose of This Exercise
-
 This take-home assignment evaluates a senior backend engineer's ability to design **correct, scalable, and resilient backend systems** under high concurrency.
 
 The handout **does not explicitly prescribe** an event-driven or eventually consistent architecture. Instead, the **Performance & Reliability Expectations** section establishes constraints — low-latency targets, non-blocking request handling, and resilience under contention — that **strongly imply** one. A strong candidate should recognize that meeting these expectations naturally leads to asynchronous, event-driven design. Arriving at this architecture through reasoning (rather than being told) is itself a signal of senior-level design judgment.
@@ -9,8 +7,6 @@ The handout **does not explicitly prescribe** an event-driven or eventually cons
 The scope is intentionally constrained. Candidates are expected to demonstrate judgment, not completeness.
 
 This guide outlines what interviewers should look for when reviewing submissions and discussing trade-offs with candidates.
-
----
 
 ## Key Scope Clarification: Authentication & Trust Boundary
 
@@ -34,8 +30,6 @@ You **are** evaluating:
 🚩 **Red flag:** Reintroducing auth, JWT validation, or user management
 🚩 **Positive signal:** Explicitly stating assumptions about trusted upstream identity
 
----
-
 ## Core Architectural Signals
 
 ### 1. SLA Awareness and Architectural Reasoning
@@ -52,8 +46,6 @@ Interviewers should evaluate whether the candidate:
 🚩 **Red flag:** Synchronous request-response flows that perform multi-step orchestration before responding
 ✅ **Strong signal:** Explicit reasoning from SLA constraints to architectural decisions
 ✅ **Strong signal:** Clear separation between the "fast path" (acknowledge + persist) and "slow path" (async processing)
-
----
 
 ### 2. Event-Driven and Eventually Consistent by Design
 
@@ -81,8 +73,6 @@ Since the candidate handout already states that **external systems should be stu
 ✅ **Strong signal:** The push notification is modeled as a downstream consumer of domain events, not bolted onto the API response
 🟡 **Acceptable:** Candidate mentions polling as a fallback but recognizes its limitations under flash sale load
 🚩 **Red flag:** No consideration of how the client learns about async outcomes
-
----
 
 ## 3. Queue vs Stream: Correct Tooling for the Job
 
@@ -113,8 +103,6 @@ These represent **commands or work to be done**.
 🚩 **Red flag:** Modeling mutable state inside a queue
 ✅ **Strong signal:** Clear explanation of why each async mechanism exists
 
----
-
 ## 4. CDC Preferred Over Application-Level Outbox
 
 When a relational database is used as the system of record, **Change Data Capture (CDC)** is preferred over manual outbox tables.
@@ -131,8 +119,6 @@ Reference:
 
 🚩 **Red flag:** Outbox pattern with no acknowledgment of trade-offs
 🟡 **Acceptable:** Outbox used deliberately with a clear justification
-
----
 
 ## 5. Order & Reservation Lifecycle Modeling
 
@@ -153,8 +139,6 @@ Strong designs will:
 
 🚩 **Red flag:** Implicit lifecycle hidden in application logic
 🚩 **Red flag:** No strategy for duplicate events or retries
-
----
 
 ## 6. High-Concurrency Inventory Management
 
@@ -205,8 +189,6 @@ The strongest implementations will connect the semaphore operation to an **immut
 ✅ **Strong signal:** Candidate connects the lease/TTL aspect to semaphore limitations and designs accordingly
 🟡 **Acceptable:** Candidate implements the correct atomic behavior without naming the pattern explicitly
 
----
-
 ## 7. Payment Timeout Handling (Follow-Up Exercise)
 
 Although full timeout enforcement may be discussed in an in-person follow-up, the take-home design should clearly *support* it.
@@ -222,8 +204,6 @@ Strong candidates will:
 🚩 **Red flag:** Cron jobs scanning the entire table
 ✅ **Strong signal:** Per-reservation delayed jobs or indexed expiration handling
 
----
-
 ## 8. NoSQL and Alternative Data Stores
 
 NoSQL data stores are acceptable **if and only if** the candidate can clearly justify their choice.
@@ -238,8 +218,6 @@ You should expect answers to:
 🚩 **Red flag:** "NoSQL is faster" without deeper reasoning
 ✅ **Strong signal:** Conditional writes, versioning, or transactional semantics
 
----
-
 ## What to Prioritize in Evaluation
 
 | Dimension      | What You're Assessing                                         |
@@ -251,8 +229,6 @@ You should expect answers to:
 | Async design   | Proper use of queues vs streams                               |
 | Assumptions    | Clear trust boundary and scope control                        |
 | Communication  | Ability to explain trade-offs clearly                         |
-
----
 
 ## Final Interviewer Note
 

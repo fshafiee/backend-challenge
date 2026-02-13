@@ -1,0 +1,8 @@
+{
+  "markdown-pdf.format": "A4",
+  "markdown-pdf.styles": [
+    "markdown-pdf-bettermode.css"
+  ],
+  "markdown-pdf.includeDefaultStyles": false,
+  "markdown-pdf.printBackground": true
+}

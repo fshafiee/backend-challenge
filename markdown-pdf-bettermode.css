@@ -1,0 +1,294 @@
+/*
+  Bettermode-inspired theme for "Markdown PDF" (yzane.markdown-pdf)
+  - Clean typography, roomy spacing, rounded UI feel, subtle borders
+  - Uses system font stack + Inter fallback (PDF uses installed fonts)
+  - Tweak brand colors in :root
+*/
+
+/* Puppeteer (PDF) generally honors @page */
+@page {
+  margin: 10mm 10mm 10mm 10mm;
+}
+
+:root {
+  /* Core */
+  --bm-bg: #ffffff;
+  --bm-text: #0f172a;      /* slate-900-ish */
+  --bm-muted: #475569;     /* slate-600-ish */
+  --bm-faint: #64748b;     /* slate-500-ish */
+
+  /* Surfaces */
+  --bm-surface: #f8fafc;   /* slate-50-ish */
+  --bm-border: #e2e8f0;    /* slate-200-ish */
+
+  /* Brand accent (tweak to your exact Bettermode theme) */
+  --bm-accent: #5b5ce6;    /* indigo/violet */
+  --bm-accent-ink: #1f2a8a;
+  --bm-accent-soft: rgba(91, 92, 230, 0.12);
+
+  /* Code */
+  --bm-code-bg: #f1f5f9;   /* slate-100-ish */
+  --bm-code-border: #e2e8f0;
+  --bm-code-text: #0b1220;
+
+  /* Shadows & radius */
+  --bm-radius: 12px;
+  --bm-radius-sm: 8px;
+  --bm-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 10px 24px rgba(15, 23, 42, 0.06);
+
+  /* Typography */
+  --bm-font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", "SF Pro Display",
+    "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --bm-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Base */
+html,
+body {
+  background: var(--bm-bg);
+  color: var(--bm-text);
+  font-family: var(--bm-font-sans);
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* The extension wraps markdown in a body; keep margins sane */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Links */
+a {
+  color: var(--bm-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(91, 92, 230, 0.25);
+}
+a:hover {
+  border-bottom-color: rgba(91, 92, 230, 0.55);
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--bm-text);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 1.2em 0 0.45em;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 26px;
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--bm-border);
+  text-align: center;
+}
+
+h2 {
+  font-size: 20px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+h3 {
+  font-size: 16px;
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+h5,
+h6 {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--bm-muted);
+}
+
+/* Paragraphs & text */
+p {
+  margin: 0.65em 0;
+}
+
+strong {
+  font-weight: 650;
+}
+
+em {
+  color: var(--bm-text);
+}
+
+small {
+  color: var(--bm-muted);
+}
+
+/* Lists */
+ul,
+ol {
+  margin: 0.6em 0 0.9em;
+  padding-left: 1.35em;
+}
+
+li {
+  margin: 0.25em 0;
+}
+
+li > p {
+  margin: 0.35em 0;
+}
+
+/* Horizontal rule */
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--bm-border);
+  margin: 1.5em 0;
+}
+
+/* Blockquotes */
+blockquote {
+  margin: 1em 0;
+  padding: 0.75em 1em;
+  background: var(--bm-surface);
+  border: 1px solid var(--bm-border);
+  border-left: 4px solid var(--bm-accent);
+  border-radius: var(--bm-radius);
+  box-shadow: var(--bm-shadow);
+}
+
+blockquote p {
+  margin: 0.4em 0;
+  color: var(--bm-muted);
+}
+
+/* Inline code */
+code {
+  font-family: var(--bm-font-mono);
+  font-size: 0.92em;
+  padding: 0.15em 0.4em;
+  border-radius: 7px;
+  background: var(--bm-code-bg);
+  border: 1px solid var(--bm-code-border);
+  color: var(--bm-code-text);
+}
+
+/* Code blocks */
+pre {
+  margin: 1em 0;
+  padding: 0.95em 1.05em;
+  overflow: auto;
+  border-radius: var(--bm-radius);
+  background: #0b1220;
+  border: 1px solid rgba(226, 232, 240, 0.25);
+  box-shadow: var(--bm-shadow);
+}
+
+pre code {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #e2e8f0;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1em 0 1.2em;
+  border: 1px solid var(--bm-border);
+  border-radius: var(--bm-radius);
+  overflow: hidden;
+  box-shadow: var(--bm-shadow);
+}
+
+thead th {
+  background: var(--bm-surface);
+  color: var(--bm-text);
+  font-weight: 650;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--bm-border);
+}
+
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--bm-border);
+  color: var(--bm-muted);
+  vertical-align: top;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:nth-child(even) td {
+  background: rgba(248, 250, 252, 0.55);
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--bm-radius-sm);
+}
+
+/* Simple "pill" highlight for <mark> */
+mark {
+  background: var(--bm-accent-soft);
+  color: var(--bm-accent-ink);
+  padding: 0.1em 0.35em;
+  border-radius: 999px;
+}
+
+/* Page breaks supported by markdown-pdf docs */
+.page {
+  page-break-after: always;
+}
+
+/* markdown-it-container (common presets) */
+.warning,
+.info,
+.tip,
+.danger,
+.success,
+.note {
+  margin: 1em 0;
+  padding: 0.85em 1em;
+  border-radius: var(--bm-radius);
+  border: 1px solid var(--bm-border);
+  background: var(--bm-surface);
+  box-shadow: var(--bm-shadow);
+}
+
+.warning {
+  border-left: 4px solid #f59e0b;
+}
+.danger {
+  border-left: 4px solid #ef4444;
+}
+.success {
+  border-left: 4px solid #22c55e;
+}
+.info,
+.note,
+.tip {
+  border-left: 4px solid var(--bm-accent);
+}
+
+/* Slightly nicer selection (useful in HTML export too) */
+::selection {
+  background: var(--bm-accent-soft);
+}
